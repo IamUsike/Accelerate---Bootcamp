@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-do List</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        background: #f0f0f0;
+      }
+      input {
+        padding: 0.5rem;
+        width: 300px;
+      }
+      button {
+        padding: 0.5rem;
+      }
+      ul {
+        margin-top: 1rem;
+      }
+      li {
+        margin: 0.5rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>To-do List</h1>
+    <input type="text" id="todo-input" placeholder="What do you need to do?" />
+    <button id="add-btn">Add</button>
+    <ul id="todo-list"></ul>
+
+    <script>
+      const input = document.getElementById("todo-input");
+      const button = document.getElementById("add-btn");
+      const todoList = document.getElementById("todo-list");
+
+      // Renders an item (with innerHTML, to allow XSS)
+      function renderTodo(todo) {
+        const li = document.createElement("li");
+        li.innerHTML = todo;
+        todoList.appendChild(li);
+      }
+
+      // Fetch all todos on page load
+      function loadTodos() {
+        fetch("http://localhost:5000/todos")
+          .then((res) => res.json())
+          .then((data) => {
+            todoList.innerHTML = "";
+            data.todos.forEach(renderTodo);
+          });
+      }
+
+      // Add new todo
+      button.addEventListener("click", () => {
+        const todoValue = input.value.trim();
+        if (!todoValue) return;
+
+        fetch("http://localhost:5000/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ todo: todoValue }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            todoList.innerHTML = "";
+            data.todos.forEach(renderTodo);
+            input.value = "";
+          });
+      });
+
+      // Initial load
+      loadTodos();
+    </script>
+  </body>
+</html>
