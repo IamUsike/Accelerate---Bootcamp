@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SecureCorpTech - Registration Portal</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e1e1e1;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        border: 1px solid #c3e6cb;
+      }
+
+      .admin-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e1e1e1;
+      }
+
+      .admin-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .admin-link a:hover {
+        text-decoration: underline;
+      }
+
+      /* Admin Panel Styles */
+      .admin-container {
+        background: #2c3e50;
+        color: white;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .admin-header {
+        background: #34495e;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .admin-header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .admin-session {
+        background: #1a252f;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-family: monospace;
+        font-size: 14px;
+      }
+
+      .registration-card {
+        background: #34495e;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #e74c3c;
+      }
+
+      .registration-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .timestamp {
+        color: #bdc3c7;
+        font-size: 14px;
+      }
+
+      .field-group {
+        margin-bottom: 15px;
+      }
+
+      .field-label {
+        font-weight: bold;
+        color: #ecf0f1;
+        margin-bottom: 5px;
+      }
+
+      .field-value {
+        background: #2c3e50;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 3px solid #3498db;
+        word-wrap: break-word;
+      }
+
+      .approve-btn,
+      .reject-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+        font-weight: 600;
+      }
+
+      .approve-btn {
+        background: #27ae60;
+        color: white;
+      }
+
+      .reject-btn {
+        background: #e74c3c;
+        color: white;
+      }
+
+      .no-registrations {
+        text-align: center;
+        color: #7f8c8d;
+        font-style: italic;
+        padding: 40px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Registration Form -->
+      <div id="registrationPage" class="container">
+        <div class="header">
+          <div class="logo">🏢 SecureCorpTech</div>
+          <div class="subtitle">Employee Registration Portal</div>
+        </div>
+
+        <form id="registrationForm">
+          <div class="form-group">
+            <label for="fullname">Full Name *</label>
+            <input type="text" id="fullname" name="fullname" required />
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username *</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="website">Personal Website</label>
+            <input
+              type="text"
+              id="website"
+              name="website"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="bio">Bio / About Me</label>
+            <textarea
+              id="bio"
+              name="bio"
+              placeholder="Tell us about yourself..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Register Account</button>
+        </form>
+
+        <div id="successMessage" style="display: none" class="success-message">
+          ✅ Thank you for registering! Your application has been submitted and
+          will be reviewed by our administrators within 24 hours.
+        </div>
+
+        <div class="admin-link">
+          <a href="#admin" onclick="showAdminPanel()">🛡️ Admin Panel</a>
+        </div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="adminPanel" class="admin-container" style="display: none">
+        <div class="admin-header">
+          <h1>🛡️ Admin Panel - Registration Reviews</h1>
+          <div class="admin-session">
+            Session:
+            <span id="sessionCookie"
+              >ADMIN_SESSION_ID=prod_admin_2024_secure_token_abc123def456ghi789</span
+            >
+          </div>
+        </div>
+
+        <div id="registrationsList">
+          <div class="no-registrations">
+            📋 No pending registrations to review
+          </div>
+        </div>
+
+        <a href="#" onclick="showRegistrationForm()" class="back-link"
+          >← Back to Registration Form</a
+        >
+      </div>
+    </div>
+
+    <script>
+      // Simulate admin session cookie (vulnerable - no httponly flag)
+      document.cookie =
+        "ADMIN_SESSION_ID=prod_admin_2024_secure_token_abc123def456ghi789; path=/";
+
+      // Storage for registrations
+      let registrations = [];
+
+      // Form submission handler
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const formData = new FormData(this);
+          const registration = {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            fullname: formData.get("fullname"),
+            username: formData.get("username"),
+            email: formData.get("email"),
+            website: formData.get("website"),
+            bio: formData.get("bio"),
+            password: formData.get("password"),
+          };
+
+          // Add to registrations array
+          registrations.push(registration);
+
+          // Show success message
+          document.getElementById("successMessage").style.display = "block";
+
+          // Clear form
+          this.reset();
+
+          // Scroll to success message
+          document
+            .getElementById("successMessage")
+            .scrollIntoView({ behavior: "smooth" });
+        });
+
+      function showAdminPanel() {
+        document.getElementById("registrationPage").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        document.body.style.background = "#2c3e50";
+        updateAdminPanel();
+      }
+
+      function showRegistrationForm() {
+        document.getElementById("adminPanel").style.display = "none";
+        document.getElementById("registrationPage").style.display = "block";
+        document.body.style.background =
+          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+      }
+
+      function updateAdminPanel() {
+        const registrationsList = document.getElementById("registrationsList");
+
+        if (registrations.length === 0) {
+          registrationsList.innerHTML =
+            '<div class="no-registrations">📋 No pending registrations to review</div>';
+          return;
+        }
+
+        let html = "";
+        registrations.forEach((reg) => {
+          html += `
+                    <div class="registration-card">
+                        <div class="registration-header">
+                            <h3>New Registration #${reg.id}</h3>
+                            <span class="timestamp">${new Date(reg.timestamp).toLocaleString()}</span>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="field-label">Full Name:</div>
+                            <div class="field-value">${reg.fullname}</div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="field-label">Username:</div>
+                            <div class="field-value">${reg.username}</div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="field-label">Email:</div>
+                            <div class="field-value">${reg.email}</div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="field-label">Website:</div>
+                            <div class="field-value">${reg.website || "Not provided"}</div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <div class="field-label">Bio:</div>
+                            <div class="field-value">${reg.bio || "Not provided"}</div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <button class="approve-btn" onclick="approveRegistration(${reg.id})">✅ Approve</button>
+                            <button class="reject-btn" onclick="rejectRegistration(${reg.id})">❌ Reject</button>
+                        </div>
+                    </div>
+                `;
+        });
+
+        registrationsList.innerHTML = html;
+      }
+
+      function approveRegistration(id) {
+        registrations = registrations.filter((reg) => reg.id !== id);
+        updateAdminPanel();
+        alert("Registration approved! ✅");
+      }
+
+      function rejectRegistration(id) {
+        registrations = registrations.filter((reg) => reg.id !== id);
+        updateAdminPanel();
+        alert("Registration rejected! ❌");
+      }
+
+      // Update session cookie display
+      function updateSessionDisplay() {
+        const sessionSpan = document.getElementById("sessionCookie");
+        if (sessionSpan) {
+          sessionSpan.textContent =
+            document.cookie
+              .split(";")
+              .find((c) => c.trim().startsWith("ADMIN_SESSION_ID="))
+              ?.trim() || "No session found";
+        }
+      }
+
+      // Initialize
+      updateSessionDisplay();
+
+      // Simulate periodic session updates
+      setInterval(updateSessionDisplay, 5000);
+    </script>
+  </body>
+</html>
