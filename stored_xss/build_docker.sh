@@ -1,4 +1,5 @@
 # Build the image
+docker rm -f todo-xss-app
 docker build -t todo-xss-app .
 
 # Run the container
