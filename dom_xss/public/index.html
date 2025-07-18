@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DOM XSS - To-do List</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      ul {
+        padding-left: 1rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>DOM XSS To-do List</h2>
+    <input type="text" id="todoInput" placeholder="Enter a task" />
+    <input type="button" id="addBtn" value="Add" />
+    <ul id="todoList"></ul>
+    <script>
+      const input = document.getElementById("todoInput");
+      const button = document.getElementById("addBtn");
+      const todoList = document.getElementById("todoList");
+
+      // Function to process the hash and add to DOM (vulnerable)
+      function processHash() {
+        const hash = location.hash;
+        if (hash.startsWith("#todo=")) {
+          const unsafeValue = decodeURIComponent(hash.slice(6));
+          // Vulnerable: directly inserting unsanitized user input into the DOM
+          todoList.innerHTML += `<li>${unsafeValue}</li>`;
+          input.value = ""; // Clear input
+        }
+      }
+
+      // Add task to the hash
+      button.addEventListener("click", () => {
+        const todoValue = input.value.trim();
+        if (!todoValue) return;
+        location.hash = `todo=${encodeURIComponent(todoValue)}`;
+      });
+
+      // Listen for hash changes (this makes it work immediately)
+      window.addEventListener("hashchange", processHash);
+
+      // Also process on page load
+      window.addEventListener("load", processHash);
+    </script>
+  </body>
+</html>

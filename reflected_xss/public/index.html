@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reflected XSS - To-do List</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      ul {
+        padding-left: 1rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Reflected XSS To-do List</h2>
+    <input type="text" id="todoInput" placeholder="Enter a task" />
+    <input type="button" id="addBtn" value="Add" />
+    <ul id="todoList"></ul>
+
+    <script>
+      const input = document.getElementById("todoInput");
+      const button = document.getElementById("addBtn");
+      const todoList = document.getElementById("todoList");
+
+      button.addEventListener("click", () => {
+        const todoValue = input.value.trim();
+        if (!todoValue) return;
+
+        // Send as query param to simulate reflected XSS
+        fetch(`http://localhost:3000/add?todo=${encodeURIComponent(todoValue)}`)
+          .then((res) => res.text())
+          .then((html) => {
+            // Reflect the response (unsafe for XSS demo)
+            todoList.innerHTML += html;
+          });
+      });
+    </script>
+  </body>
+</html>
